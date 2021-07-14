@@ -53,7 +53,7 @@ test_data_loader = DataLoader(
     shuffle = False,
     num_workers = 2,
     drop_last = False,
-    #collate_fn = utils.collate_fn
+    collate_fn = utils.collate_fn
 )
 
 ######################################## For Test Time augmentation
