@@ -1,9 +1,11 @@
 import os
 import numpy as np
-import torch
+
 from PIL import Image
 
+import torch
 from torch.utils.data import Dataset
+
 from torchvision import transforms
 
 import my_utils

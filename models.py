@@ -118,6 +118,7 @@ def Retinanet_resnet50_fpn(num_classes=2, pretrained_backbone=True):
     model =  retinanet_resnet50_fpn(pretrained=False, progress=True,
                            num_classes=num_classes, pretrained_backbone=pretrained_backbone)
     """
+    retinanet_resnet50_fpn:
     Args:
         pretrained (bool): If True, returns a model pre-trained on COCO train2017
         progress (bool): If True, displays a progress bar of the download to stderr

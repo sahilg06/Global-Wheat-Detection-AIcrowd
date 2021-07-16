@@ -9,8 +9,9 @@ import torch
 from PIL import Image
 
 from torch import nn
-import torchvision
 from torch.utils.data import DataLoader
+
+import torchvision
 from torchvision import transforms
 
 import matplotlib.pyplot as plt
@@ -20,9 +21,10 @@ import odach as oda # Test time augmentation(TTA)
 import my_utils
 from datasets import WheatDataset_test
 
-#base_dir = "/raid/sahil_g_ma/wheatDetection"
-base_dir = '/workspace/wheatDetection'
+# Change it to the path to your repo
+base_dir = "/raid/sahil_g_ma/wheatDetection"
 
+# We need some helper functions for inference
 sys.path.append(os.path.join(base_dir, 'detection'))
 import utils
 
@@ -56,7 +58,7 @@ test_data_loader = DataLoader(
     collate_fn = utils.collate_fn
 )
 
-######################################## For Test Time augmentation
+####################################################################### For Test Time augmentation
 # tta = [oda.HorizontalFlip(), oda.VerticalFlip(), oda.Rotate90(), oda.Multiply(0.9), oda.Multiply(1.1)]
 # # wrap model and tta
 # tta_model = oda.TTAWrapper(model, tta, skip_box_thr=0.3)
@@ -91,7 +93,7 @@ test_data_loader = DataLoader(
 
 
 
-############################################# For filtering outputs 
+####################################################################### For filtering outputs 
 # idx = 0
 # results = []
 # print("Starting Inference......")
@@ -116,7 +118,7 @@ test_data_loader = DataLoader(
 
 
 
-############################################## Normal Inference
+####################################################################### For Normal Inference
 idx = 0
 results = []
 results_polt = []
@@ -150,7 +152,7 @@ print("All batches done")
 
 # final submission
 sub_df = pd.DataFrame(results)
-#sub_df_plot = pd.DataFrame(results_polt)
+sub_df_plot = pd.DataFrame(results_polt)
 
 
 print("Saving your file")
@@ -160,21 +162,21 @@ print("File saved")
 
 
 # Plotting some resluts
-# for image_id, pred_str in zip(sub_df_plot.iloc[:3]['image_name'], sub_df_plot.iloc[:3]['PredString']):
-#     image_path = os.path.join(base_dir, 'test', f'{image_id}.png')
-#     image = cv2.imread(image_path, cv2.IMREAD_COLOR)
-#     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
-#     image /= 255.0
-#     boxes = my_utils.get_bboxes(pred_str)
+for image_id, pred_str in zip(sub_df_plot.iloc[:3]['image_name'], sub_df_plot.iloc[:3]['PredString']):
+    image_path = os.path.join(base_dir, 'test', f'{image_id}.png')
+    image = cv2.imread(image_path, cv2.IMREAD_COLOR)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB).astype(np.float32)
+    image /= 255.0
+    boxes = my_utils.get_bboxes(pred_str)
 
-#     fig, ax = plt.subplots(1, 1, figsize=(16, 8))
+    fig, ax = plt.subplots(1, 1, figsize=(16, 8))
 
-#     for box in boxes:
-#         cv2.rectangle(image,
-#                       (box[0], box[1]),
-#                       (box[2], box[3]),
-#                       (255, 0, 0), 3)
+    for box in boxes:
+        cv2.rectangle(image,
+                      (box[0], box[1]),
+                      (box[2], box[3]),
+                      (255, 0, 0), 3)
 
-#     ax.set_axis_off()
-#     ax.imshow(image)
-#     plt.show(block = True)
+    ax.set_axis_off()
+    ax.imshow(image)
+    plt.show(block = True)
