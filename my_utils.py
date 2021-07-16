@@ -44,7 +44,7 @@ def get_bboxes(pred_str):
     bboxes = [list(map(int, preds[i+1:i+span] )) for i in range(0, len(preds), span)]
     return bboxes
 
-# augmentation functions
+# augmentation function for training data
 def get_train_augs():
     return albumentations.Compose([
         albumentations.Flip(p=0.60),
@@ -56,11 +56,13 @@ def get_train_augs():
         'label_fields': ['labels']
     })
 
+# augmentation function for validation data
 def get_valid_augs():
     return albumentations.Compose([
         ToTensorV2()
     ], bbox_params={'format': 'pascal_voc', 'label_fields': ['labels']})
 
+# Advance augmentation function for training data
 def get_train_augs_adv():
     return A.Compose(
         [
@@ -85,7 +87,7 @@ def get_train_augs_adv():
         )
     )
 
-
+# For filtering outputs during inference
 def filter_outputs(predictions, image_index, method='soft_nms', image_size=1024, iou_thr=0.5, skip_box_thr=0.3, weights=None):
     #reference : https://github.com/ZFTurbo/Weighted-Boxes-Fusion
 

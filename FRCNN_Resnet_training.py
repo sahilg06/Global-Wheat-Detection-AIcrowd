@@ -1,19 +1,18 @@
-# !pip install ipywidgets --user
-
 import os
 import sys
 import numpy as np 
 import pandas as pd
 
-import torch
-print('torch-version = ',torch.__version__ )
 from PIL import Image
 
+import torch
 from torch import nn
-import torchvision
-print('torchvision-version = ',torchvision.__version__)
 from torch.utils.data import DataLoader
+print('torch-version = ',torch.__version__ )
+
+import torchvision
 from torchvision import transforms
+print('torchvision-version = ',torchvision.__version__)
 
 import models
 import my_utils
@@ -22,9 +21,10 @@ from datasets import WheatDataset_training
 # To select the gpu
 #torch.cuda.set_device(1)
 
+# Change it to the path to your repo
 base_dir = "/raid/sahil_g_ma/wheatDetection"
-#base_dir = '/workspace/wheatDetection'
 
+# We need some helper functions for training
 sys.path.append(os.path.join(base_dir, 'detection'))
 from engine import train_one_epoch, evaluate
 import utils
@@ -36,8 +36,8 @@ train_df = pd.read_csv(os.path.join(base_dir, 'train', 'train.csv'))
 train_df = train_df.drop([7, 72, 16, 85], axis=0)
 
 # To avoid training on images with no_box
-
 #train_df = train_df[train_df.BoxesString != 'no_box']
+
 train_df = train_df.reset_index(drop=True)
 
 # For training with Pseudo Labels
@@ -45,14 +45,12 @@ train_df = train_df.reset_index(drop=True)
 # pseudo_df = pseudo_df.rename(columns={'PredString':'BoxesString'})
 # train_df =  pd.concat([train_df, pseudo_df]).reset_index(drop=True)
 
-
 # Checking number of GPUs available
 #gpu_count = torch.cuda.device_count()
 #print('GPU_count=', gpu_count)
 
 # train on the GPU or on the CPU, if a GPU is not available
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 # get the model using our helper function
 model = models.FRCNN_resnet50_fpn(pre_trained=False, pretrained_backbone=False)
@@ -72,8 +70,6 @@ dataset = WheatDataset_training(train_df, base_dir)
 dataset_test = WheatDataset_training(train_df, base_dir)
 
 # split the dataset in train and test set
-#debugging
-#indices = [i for i in range(len(dataset))]
 indices = torch.randperm(len(dataset)).tolist()
 dataset_train = torch.utils.data.Subset(dataset, indices[:-100])
 dataset_validation = torch.utils.data.Subset(dataset_test, indices[-100:])
@@ -82,10 +78,10 @@ data_loader = torch.utils.data.DataLoader(
     dataset, batch_size=16, shuffle=True, num_workers=2,
     collate_fn=utils.collate_fn)
 
-# define training and validation data loaders
-# data_loader_train = torch.utils.data.DataLoader(
-#     dataset_train, batch_size=8, shuffle=True, num_workers=2,
-#     collate_fn=utils.collate_fn)
+#define training and validation data loaders
+data_loader_train = torch.utils.data.DataLoader(
+    dataset_train, batch_size=8, shuffle=True, num_workers=2,
+    collate_fn=utils.collate_fn)
 
 data_loader_validation = torch.utils.data.DataLoader(
     dataset_validation, batch_size=16, shuffle=False, num_workers=2,
@@ -106,7 +102,7 @@ num_epochs = 30
 
 for epoch in range(num_epochs):
     # train for one epoch, printing every 10 iterations
-    train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq=100)
+    train_one_epoch(model, optimizer, data_loader_train, device, epoch, print_freq=100)
     # update the learning rate
     lr_scheduler.step()
     # evaluate on the test dataset
@@ -117,7 +113,7 @@ for epoch in range(num_epochs):
 torch.save(model.state_dict(), os.path.join(base_dir, "saved_models", "frcnn_resnet50fpn_scratch20.pth"))
 
 
-# Debugging
+# Debugging for index error
 # for idx, (data, image) in enumerate(dataset):
 #    print(idx)
 
