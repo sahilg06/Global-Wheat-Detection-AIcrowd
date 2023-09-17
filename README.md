@@ -32,6 +32,10 @@ You can download the dataset from [here](https://www.aicrowd.com/challenges/glob
     └── train.csv
 ```
 
+### Evaluation Method
+The metric used is the **Average Domain Accuracy** (ADA). Two boxes are matched if their Intersection over Union (IoU) is higher than a threshold of 0.5. Final Score by this approach is **56.2**% ADA. 
+
+
 ### References
 Use [Filtering-Outputs](https://github.com/ZFTurbo/Weighted-Boxes-Fusion) for filtering outputs during inference<br>
 Use [TTA](https://github.com/kentaroy47/ODA-Object-Detection-ttA) for Test-time-augmentation<br>
