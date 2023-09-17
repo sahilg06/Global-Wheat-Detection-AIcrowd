@@ -33,7 +33,7 @@ You can download the dataset from [here](https://www.aicrowd.com/challenges/glob
 ```
 
 ### Evaluation Method
-The metric used is the **Average Domain Accuracy** (ADA). Two boxes are matched if their Intersection over Union (IoU) is higher than a threshold of 0.5. Final Score by this approach is **56.2**% ADA. 
+The metric used is the **Average Domain Accuracy** (ADA). Two boxes are matched if their Intersection over Union (IoU) is higher than a threshold of 0.5. Final Score by this approach is **56.2**% ADA. Highest score in the competition was **70**% ADA.
 
 
 ### References
